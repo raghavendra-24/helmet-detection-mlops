@@ -23,11 +23,12 @@ def upload_to_huggingface(repo_id, model_path, token=None):
 
     print(f"🚀 Uploading files from {model_path} to {repo_id}...")
     
-    # Upload everything in the models directory
+    # Upload essential model files only
     api.upload_folder(
         folder_path=str(model_path),
         repo_id=repo_id,
         repo_type="model",
+        allow_patterns=["*.pt", "baseline_stats.json"]
     )
     
     print(f"✅ Upload complete! Check your model at: https://huggingface.co/{repo_id}")
