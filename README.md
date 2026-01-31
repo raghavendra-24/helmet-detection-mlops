@@ -4,7 +4,7 @@ A production-ready helmet compliance detection system with drift monitoring, dep
 
 ## 🌐 Live Demo
 
-👉 **[Live Demo Coming Soon]** | [API Docs Coming Soon] | [GitHub](https://github.com/raghavendra-24/realtime-helmet-detection)
+👉 **[Live Demo Coming Soon]** | [API Docs Coming Soon] | [GitHub](https://github.com/raghavendra-24/helmet-detection-mlops)
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
 ![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-green)
