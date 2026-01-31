@@ -9,7 +9,7 @@ import json
 import cv2
 import numpy as np
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, File, UploadFile, HTTPException, Query, WebSocket, WebSocketDisconnect
@@ -17,7 +17,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse
 from pydantic import BaseModel
 
-from .inference import InferenceEngine
+# from .inference import InferenceEngine  # Moved to local import to allow ONNX-only runtime
 from .drift_detector import DriftDetector
 from .metrics import (
     get_metrics,
@@ -32,7 +32,7 @@ MODEL_PATH = Path(__file__).parent.parent / "models" / "helmet_yolov8s_best.pt"
 BASELINE_PATH = Path(__file__).parent.parent / "models" / "baseline_stats.json"
 
 # Global instances
-engine: Optional[InferenceEngine] = None
+engine: Optional[Any] = None
 drift_detector: Optional[DriftDetector] = None
 
 
@@ -48,16 +48,38 @@ async def lifespan(app: FastAPI):
     ensure_models_exist()
     
     # Load inference engine
-    if MODEL_PATH.exists():
-        engine = InferenceEngine(
-            model_path=str(MODEL_PATH),
-            confidence_threshold=0.3,  # Lower threshold for more detections
-            device="cpu"  # Use "cuda" if GPU available
-        )
-        print(f"✅ Model loaded from {MODEL_PATH}")
-    else:
-        print(f"⚠️ Model not found at {MODEL_PATH}")
-        print("   Please place your model file in the models/ directory")
+    MODEL_PATH_ONNX = Path(__file__).parent.parent / "models" / "best.onnx"
+    
+    # Priority 1: Semantic ONNX (Lightweight, ideal for Render)
+    if MODEL_PATH_ONNX.exists():
+        try:
+            from .onnx_inference import OnnxInferenceEngine
+            engine = OnnxInferenceEngine(
+                model_path=str(MODEL_PATH_ONNX),
+                confidence_threshold=0.3
+            )
+            print(f"✅ Loaded ONNX Model: {MODEL_PATH_ONNX}")
+        except Exception as e:
+            print(f"⚠️ Failed to load ONNX model: {e}")
+            
+    # Priority 2: PyTorch (Heavy, fallback)
+    if engine is None and MODEL_PATH.exists():
+        try:
+            from .inference import InferenceEngine
+            engine = InferenceEngine(
+                model_path=str(MODEL_PATH),
+                confidence_threshold=0.3,
+                device="cpu"
+            )
+            print(f"✅ Loaded PyTorch Model: {MODEL_PATH}")
+        except ImportError:
+            print("⚠️ PyTorch/Ultralytics not installed. Install requirements.txt for .pt support.")
+        except Exception as e:
+            print(f"❌ Failed to load PyTorch model: {e}")
+            
+    if engine is None:
+        print(f"⚠️ No model loaded. Please ensure models are present.")
+        print("   Required: models/best.onnx OR models/helmet_yolov8s_best.pt")
     
     # Load drift detector
     if BASELINE_PATH.exists():

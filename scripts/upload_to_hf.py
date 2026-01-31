@@ -28,7 +28,7 @@ def upload_to_huggingface(repo_id, model_path, token=None):
         folder_path=str(model_path),
         repo_id=repo_id,
         repo_type="model",
-        allow_patterns=["*.pt", "baseline_stats.json"]
+        allow_patterns=["*.pt", "*.onnx", "baseline_stats.json"]
     )
     
     print(f"✅ Upload complete! Check your model at: https://huggingface.co/{repo_id}")

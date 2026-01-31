@@ -83,6 +83,17 @@ def ensure_models_exist(models_dir: Path = None):
                     local_dir=str(models_dir)
                 )
             
+            if not (models_dir / "best.onnx").exists():
+                try:
+                    print(f"📥 Downloading ONNX model from Hugging Face: {hf_repo}")
+                    hf_hub_download(
+                        repo_id=hf_repo,
+                        filename="best.onnx",
+                        local_dir=str(models_dir)
+                    )
+                except Exception as e:
+                    print(f"⚠️ ONNX model not found in repo (skipping): {e}")
+
             if not baseline_path.exists():
                 print(f"📥 Downloading baseline from Hugging Face: {hf_repo}")
                 hf_hub_download(

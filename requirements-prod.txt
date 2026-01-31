@@ -1,0 +1,19 @@
+# Production requirements - Lightweight for Render Free Tier
+
+# Backend
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+python-multipart>=0.0.6
+
+# Inference (ONNX only - no Pytorch/Ultralytics)
+onnxruntime>=1.15.0
+opencv-python-headless>=4.8.0
+numpy>=1.24.0
+
+# Monitoring
+prometheus-client>=0.17.0
+
+# Utilities
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+huggingface_hub>=0.16.0
