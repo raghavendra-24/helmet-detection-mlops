@@ -1,0 +1,31 @@
+# Railway-optimized requirements
+# Uses CPU-only PyTorch to reduce size
+
+# Core ML (CPU-only, smaller)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+torchvision
+
+# YOLOv8 (lightweight)
+ultralytics>=8.0.0
+
+# Backend
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+python-multipart>=0.0.6
+
+# Image Processing
+opencv-python-headless>=4.8.0
+Pillow>=10.0.0
+numpy>=1.24.0
+
+# Monitoring
+prometheus-client>=0.17.0
+
+# Utilities
+pydantic>=2.0.0
+scipy>=1.11.0
+python-dotenv>=1.0.0
+tqdm>=4.65.0
+huggingface_hub>=0.16.0
+websockets>=12.0

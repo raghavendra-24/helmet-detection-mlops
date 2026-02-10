@@ -1,0 +1,5 @@
+# Add tqdm for model download progress
+tqdm>=4.65.0
+
+# Hugging Face Hub for model hosting
+huggingface_hub>=0.16.0

@@ -1,0 +1,54 @@
+# Helmet Detection Training Configuration
+# ========================================
+# YOLOv8s training hyperparameters for industrial safety monitoring
+
+# Model
+model: yolov8s.pt  # Pretrained model
+
+# Dataset
+data: configs/dataset.yaml
+
+# Training
+epochs: 40
+patience: 10  # Early stopping patience
+batch: 16  # Per GPU
+imgsz: 640
+device: "0,1"  # Dual GPU (for Kaggle T4 x2)
+
+# Optimizer
+optimizer: AdamW
+lr0: 0.001
+lrf: 0.01
+momentum: 0.937
+weight_decay: 0.0005
+
+# Augmentations (tuned for industrial environments)
+# Lighting variation - handles harsh indoor/outdoor lighting
+hsv_h: 0.015
+hsv_s: 0.7
+hsv_v: 0.4
+
+# Geometric transforms - handles different camera angles
+degrees: 10
+translate: 0.1
+scale: 0.5
+shear: 5
+perspective: 0.001
+
+# Flipping - only horizontal (workers don't appear upside down)
+flipud: 0.0
+fliplr: 0.5
+
+# Advanced augmentations
+mosaic: 1.0  # Mosaic for multi-scale training
+mixup: 0.1  # MixUp for regularization
+copy_paste: 0.1  # Copy-paste for occlusion
+
+# Misc
+workers: 8
+project: runs/helmet
+name: yolov8s_helmet
+exist_ok: true
+pretrained: true
+verbose: true
+seed: 42

@@ -1,0 +1,19 @@
+# Helmet Detection Dataset Configuration
+# ========================================
+# YOLOv8 dataset format for helmet compliance detection
+
+# Dataset paths (update after downloading from Kaggle)
+path: ./datasets/helmet_detection
+train: train/images
+val: valid/images
+test: test/images  # optional
+
+# Classes
+# 0: helmet - Protective helmet is worn on head
+# 1: no_helmet - Head visible but no helmet worn
+names:
+  0: helmet
+  1: no_helmet
+
+# Dataset statistics (update after merging)
+# Expected: ~10,000+ images with 30-40% no_helmet samples

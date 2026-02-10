@@ -1,0 +1,40 @@
+# Alert rules for drift detection
+
+groups:
+  - name: detection_alerts
+    rules:
+      - alert: HighDriftScore
+        expr: detection_drift_score > 2.0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High drift score detected"
+          description: "Drift score {{ $value }} exceeds threshold 2.0"
+
+      - alert: LowFPS
+        expr: detection_current_fps < 10
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low FPS detected"
+          description: "Current FPS {{ $value }} is below 10"
+
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, detection_inference_latency_seconds_bucket) > 0.1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High inference latency"
+          description: "95th percentile latency {{ $value }}s exceeds 100ms"
+
+      - alert: ModelNotLoaded
+        expr: detection_model_loaded == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Model not loaded"
+          description: "Detection model is not loaded"

@@ -1,0 +1,5 @@
+{
+  "conf_threshold": 0.25,
+  "iou_threshold": 0.5,
+  "imgsz": 640
+}
